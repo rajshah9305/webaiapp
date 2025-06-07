@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Nexus - Advanced Analytics Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00d4ff, #ffffff, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .card h3 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* AI Chat Interface */
+        .chat-container {
+            height: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            margin-left: auto;
+        }
+
+        .message.ai {
+            background: rgba(156, 39, 176, 0.3);
+            border: 1px solid rgba(156, 39, 176, 0.5);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem;
+            color: #ffffff;
+            margin-right: 0.5rem;
+        }
+
+        .chat-input input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+        }
+
+        /* Analytics Chart */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        /* Code Editor */
+        .code-editor {
+            background: #1e1e2e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            min-height: 200px;
+            color: #cdd6f4;
+            font-size: 0.9rem;
+        }
+
+        .code-editor textarea {
+            width: 100%;
+            height: 150px;
+            background: transparent;
+            border: none;
+            color: #cdd6f4;
+            font-family: inherit;
+            font-size: inherit;
+            resize: none;
+            outline: none;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table th {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00d4ff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Status Indicators */
+        .status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status.online {
+            background: #4caf50;
+        }
+
+        .status.processing {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        .status.offline {
+            background: #f44336;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">🤖 AI Nexus</div>
+                <ul class="nav-menu">
+                    <li><a href="#dashboard" class="nav-link active">Dashboard</a></li>
+                    <li><a href="#analytics" class="nav-link">Analytics</a></li>
+                    <li><a href="#ai-tools" class="nav-link">AI Tools</a></li>
+                    <li><a href="#data" class="nav-link">Data</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h1>AI-Powered Analytics Platform</h1>
+                <p>Harness the power of artificial intelligence with advanced analytics, real-time data processing, and intelligent automation tools.</p>
+                <button class="btn" onclick="initializeAI()">🚀 Launch AI Assistant</button>
+            </section>
+
+            <div class="dashboard">
+                <!-- AI Chat Assistant -->
+                <div class="card">
+                    <h3>🤖 AI Chat Assistant</h3>
+                    <div class="status online"></div>
+                    <span>AI Status: Online</span>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message ai">
+                                Hello! I'm your AI assistant. I can help with data analysis, code generation, insights, and much more. What would you like to explore today?
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="Ask me anything..." onkeypress="handleChatInput(event)">
+                            <button class="btn" onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Analytics -->
+                <div class="card">
+                    <h3>📊 Real-time Analytics</h3>
+                    <div class="chart-container">
+                        <canvas id="analyticsChart"></canvas>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-secondary" onclick="updateAnalytics()">🔄 Refresh Data</button>
+                        <button class="btn" onclick="exportData()">📤 Export</button>
+                    </div>
+                </div>
+
+                <!-- Code Generator -->
+                <div class="card">
+                    <h3>💻 AI Code Generator</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <select id="codeLanguage" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 0.5rem; color: white;">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="react">React</option>
+                            <option value="html">HTML/CSS</option>
+                        </select>
+                        <button class="btn" onclick="generateCode()" style="margin-left: 0.5rem;">🎯 Generate</button>
+                    </div>
+                    <div class="code-editor">
+                        <textarea id="codeOutput" placeholder="Generated code will appear here..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Data Processing -->
+                <div class="card">
+                    <h3>🗃️ Data Processing Hub</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="file" id="fileInput" accept=".csv,.json,.xlsx" style="display: none;" onchange="processFile(event)">
+                        <button class="btn" onclick="document.getElementById('fileInput').click()">📁 Upload Data</button>
+                        <button class="btn btn-secondary" onclick="generateSampleData()">🎲 Generate Sample</button>
+                    </div>
+                    <div id="dataPreview" style="max-height: 300px; overflow-y: auto;"></div>
+                </div>
+
+                <!-- AI Insights -->
+                <div class="card">
+                    <h3>🧠 AI Insights Engine</h3>
+                    <div id="insightsContainer">
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">🎯</div>
+                                <h4>Pattern Recognition</h4>
+                                <p>Advanced ML algorithms identify hidden patterns in your data</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📈</div>
+                                <h4>Predictive Analytics</h4>
+                                <p>Forecast trends and make data-driven predictions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="generateInsights()">✨ Generate Insights</button>
+                </div>
+
+                <!-- Performance Monitor -->
+                <div class="card">
+                    <h3>⚡ Performance Monitor</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="text-align: center; padding: 1rem; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">
+                            <div style="font-size: 1.5rem; color: #4caf50;">98%</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Uptime</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: rgba(0, 212, 255, 0.1); border-radius: 8px;">
+                            <div style="font-size: 1.5rem; color: #00d4ff;">2.3s</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Response Time</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: rgba(156, 39, 176, 0.1); border-radius: 8px;">
+                            <div style="font-size: 1.5rem; color: #9c27b0;">15.2K</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Requests/hr</div>
+                        </div>
+                    </div>
+                    <div class="status processing"></div>
+                    <span>System Status: Processing</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables
+        let analyticsChart;
+        let chatHistory = [];
+        let currentData = [];
+
+        // Initialize the application
+        window.onload = function() {
+            initializeAnalytics();
+            initializePerformanceMonitor();
+            simulateRealTimeUpdates();
+        };
+
+        // AI Chat System
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            // Simulate AI processing
+            setTimeout(() => {
+                const aiResponse = generateAIResponse(message);
+                addChatMessage(aiResponse, 'ai');
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function addChatMessage(message, type) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            chatHistory.push({type, message, timestamp: new Date()});
+        }
+
+        function generateAIResponse(userMessage) {
+            const responses = {
+                'hello': 'Hello! How can I assist you with your data analysis or AI tasks today?',
+                'data': 'I can help you analyze data, create visualizations, and extract meaningful insights. What type of data are you working with?',
+                'code': 'I can generate code in multiple languages including JavaScript, Python, React, and more. What would you like me to build?',
+                'analytics': 'Our analytics dashboard shows real-time performance metrics. I can help you interpret the data and identify trends.',
+                'help': 'I offer comprehensive AI assistance including: data analysis, code generation, predictive modeling, pattern recognition, and intelligent automation.',
+                'chart': 'I can create various chart types including line charts, bar charts, scatter plots, and heat maps. What data would you like to visualize?',
+                'performance': 'System performance is optimal with 98% uptime and 2.3s average response time. All AI modules are functioning normally.',
+                'insights': 'Based on current data patterns, I can identify trends, anomalies, and provide actionable recommendations for optimization.'
+            };
+
+            const lowerMessage = userMessage.toLowerCase();
+            
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key)) {
+                    return response;
+                }
+            }
+
+            return `I understand you're asking about "${userMessage}". I can provide detailed analysis, generate relevant code, or help with data processing. Could you be more specific about what you'd like me to help with?`;
+        }
+
+        // Analytics Chart Initialization
+        function initializeAnalytics() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            
+            analyticsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: generateTimeLabels(),
+                    datasets: [{
+                        label: 'AI Processing Load',
+                        data: generateRandomData(12, 30, 90),
+                        borderColor: '#00d4ff',
+                        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Data Throughput',
+                        data: generateRandomData(12, 20, 80),
+                        borderColor: '#9c27b0',
+                        backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Code Generator
+        function generateCode() {
+            const language = document.getElementById('codeLanguage').value;
+            const output = document.getElementById('codeOutput');
+            
+            const codeTemplates = {
+                javascript: `// AI-Generated JavaScript Function
+function analyzeData(dataset) {
+    const results = {
+        mean: dataset.reduce((a, b) => a + b) / dataset.length,
+        max: Math.max(...dataset),
+        min: Math.min(...dataset)
+    };
+    
+    console.log('Analysis Results:', results);
+    return results;
+}
+
+// Usage example
+const sampleData = [45, 67, 23, 89, 12, 56, 78];
+analyzeData(sampleData);`,
+
+                python: `# AI-Generated Python Data Analysis
+import pandas as pd
+import numpy as np
+
+def advanced_analysis(data):
+    """Perform comprehensive data analysis"""
+    df = pd.DataFrame(data)
+    
+    analysis = {
+        'summary': df.describe(),
+        'correlation': df.corr(),
+        'null_values': df.isnull().sum()
+    }
+    
+    return analysis
+
+# Example usage
+sample_data = {'values': [1, 2, 3, 4, 5]}
+results = advanced_analysis(sample_data)
+print(results)`,
+
+                react: `// AI-Generated React Component
+import React, { useState, useEffect } from 'react';
+
+const DataDashboard = () => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        fetchData();
+    }, []);
+    
+    const fetchData = async () => {
+        try {
+            // Simulate API call
+            const response = await fetch('/api/data');
+            const result = await response.json();
+            setData(result);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    if (loading) return <div>Loading...</div>;
+    
+    return (
+        <div className="dashboard">
+            {data.map((item, index) => (
+                <div key={index} className="data-card">
+                    {item.value}
+                </div>
+            ))}
+        </div>
+    );
+};
+
+export default DataDashboard;`,
+
+                html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dashboard</title>
+    <style>
+        .ai-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="ai-dashboard">
+        <h1>AI Analytics Dashboard</h1>
+        <div class="metric-card">
+            <h3>Performance Metrics</h3>
+            <p>Real-time system monitoring</p>
+        </div>
+    </div>
+</body>
+</html>`
+            };
+            
+            output.value = codeTemplates[language] || '// Code generation in progress...';
+        }
+
+        // Data Processing
+        function processFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let data;
+                    if (file.type === 'application/json') {
+                        data = JSON.parse(e.target.result);
+                    } else if (file.name.endsWith('.csv')) {
+                        data = parseCSV(e.target.result);
+                    }
+                    
+                    currentData = data;
+                    displayDataPreview(data);
+                } catch (error) {
+                    console.error('Error processing file:', error);
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function generateSampleData() {
+            const sampleData = [];
+            for (let i = 0; i < 50; i++) {
+                sampleData.push({
+                    id: i + 1,
+                    name: `Item ${i + 1}`,
+                    value: Math.floor(Math.random() * 100) + 1,
+                    category: ['A', 'B', 'C'][Math.floor(Math.random() * 3)],
+                    timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString()
+                });
+            }
+            
+            currentData = sampleData;
+            displayDataPreview(sampleData);
+        }
+
+        function displayDataPreview(data) {
+            const container = document.getElementById('dataPreview');
+            
+            if (Array.isArray(data) && data.length > 0) {
+                const table = document.createElement('table');
+                table.className = 'data-table';
+                
+                // Create header
+                const header = table.createTHead();
+                const headerRow = header.insertRow();
+                Object.keys(data[0]).forEach(key => {
+                    const th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                });
+                
+                // Create body
+                const tbody = table.createTBody();
+                data.slice(0, 10).forEach(row => {
+                    const tr = tbody.insertRow();
+                    Object.values(row).forEach(value => {
+                        const td = tr.insertCell();
+                        td.textContent = typeof value === 'object' ? JSON.stringify(value) : value;
+                    });
+                });
+                
+                container.innerHTML = '';
+                container.appendChild(table);
+                
+                if (data.length > 10) {
+                    const note = document.createElement('p');
+                    note.textContent = `Showing first 10 of ${data.length} records`;
+                    note.style.marginTop = '1rem';
+                    note.style.opacity = '0.7';
+                    container.appendChild(note);
+                }
+            }
+        }
+
+        // Utility Functions
+        function generateTimeLabels() {
+            const labels = [];
+            for (let i = 11; i >= 0; i--) {
+                const date = new Date();
+                date.setHours(date.getHours() - i);
+                labels.push(date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+            }
+            return labels;
+        }
+
+        function generateRandomData(count, min = 0, max = 100) {
+            return Array.from({length: count}, () => 
+                Math.floor(Math.random() * (max - min + 1)) + min
+            );
+        }
+
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            const headers = lines[0].split(',');
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const values = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header.trim()] = values[index]?.trim() || '';
+                    });
+                    data.push(row);
+                }
+            }
+            
+            return data;
+        }
+
+        // AI Functions
+        function initializeAI() {
+            addChatMessage('🚀 AI Assistant initialized! All systems are online and ready for advanced analytics.', 'ai');
+        }
+
+        function updateAnalytics() {
+            if (analyticsChart) {
+                analyticsChart.data.datasets[0].data = generateRandomData(12, 30, 90);
+                analyticsChart.data.datasets[1].data = generateRandomData(12, 20, 80);
+                analyticsChart.update();
+            }
+        }
+
+        function exportData() {
+            if (currentData.length > 0) {
+                const dataStr = JSON.stringify(currentData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'ai_analytics_export.json';
+                link.click();
+                URL.revokeObjectURL(url);
+                
+                addChatMessage('📤 Data exported successfully! Your analytics data has been downloaded.', 'ai');
+            } else {
+                addChatMessage('⚠️ No data available to export. Please generate or upload data first.', 'ai');
+            }
+        }
+
+        function generateInsights() {
+            const insights = [
+                '🎯 Pattern Analysis: Detected 23% increase in processing efficiency over the last week',
+                '📈 Trend Prediction: Data throughput expected to grow by 15% in the next month',
+                '🔍 Anomaly Detection: 3 unusual spikes identified in the dataset, likely due to system optimizations',
+                '💡 Optimization Recommendation: Consider implementing caching for frequently accessed data',
+                '🚀 Performance Insight: Peak usage occurs between 2-4 PM, suggesting optimal maintenance window at night',
+                '📊 Data Quality: 98.7% data integrity maintained across all processing pipelines'
+            ];
+            
+            const container = document.getElementById('insightsContainer');
+            container.innerHTML = '<h4>🧠 Latest AI Insights</h4>';
+            
+            insights.forEach((insight, index) => {
+                setTimeout(() => {
+                    const insightDiv = document.createElement('div');
+                    insightDiv.style.cssText = `
+                        background: rgba(0, 212, 255, 0.1);
+                        border-left: 3px solid #00d4ff;
+                        padding: 1rem;
+                        margin: 0.5rem 0;
+                        border-radius: 0 8px 8px 0;
+                        animation: slideIn 0.5s ease;
+                    `;
+                    insightDiv.textContent = insight;
+                    container.appendChild(insightDiv);
+                }, index * 500);
+            });
+            
+            addChatMessage('✨ AI insights generated! Check the Insights Engine for detailed analysis and recommendations.', 'ai');
+        }
+
+        function initializePerformanceMonitor() {
+            // Simulate real-time performance updates
+            setInterval(() => {
+                updatePerformanceMetrics();
+            }, 5000);
+        }
+
+        function updatePerformanceMetrics() {
+            const uptimeElement = document.querySelector('.card:nth-last-child(1) .feature-grid div:nth-child(1) div:first-child');
+            const responseTimeElement = document.querySelector('.card:nth-last-child(1) .feature-grid div:nth-child(2) div:first-child');
+            const requestsElement = document.querySelector('.card:nth-last-child(1) .feature-grid div:nth-child(3) div:first-child');
+            
+            if (uptimeElement) {
+                const uptime = (97 + Math.random() * 2).toFixed(1);
+                uptimeElement.textContent = `${uptime}%`;
+            }
+            
+            if (responseTimeElement) {
+                const responseTime = (1.5 + Math.random() * 2).toFixed(1);
+                responseTimeElement.textContent = `${responseTime}s`;
+            }
+            
+            if (requestsElement) {
+                const requests = (12000 + Math.random() * 6000).toFixed(0);
+                const formattedRequests = (requests / 1000).toFixed(1);
+                requestsElement.textContent = `${formattedRequests}K`;
+            }
+        }
+
+        function simulateRealTimeUpdates() {
+            // Update analytics chart every 30 seconds
+            setInterval(() => {
+                if (analyticsChart) {
+                    // Add new data point and remove oldest
+                    const newData1 = Math.floor(Math.random() * 60) + 30;
+                    const newData2 = Math.floor(Math.random() * 60) + 20;
+                    
+                    analyticsChart.data.datasets[0].data.shift();
+                    analyticsChart.data.datasets[0].data.push(newData1);
+                    analyticsChart.data.datasets[1].data.shift();
+                    analyticsChart.data.datasets[1].data.push(newData2);
+                    
+                    // Update time labels
+                    analyticsChart.data.labels.shift();
+                    const now = new Date();
+                    analyticsChart.data.labels.push(now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+                    
+                    analyticsChart.update('none');
+                }
+            }, 30000);
+
+            // Simulate occasional AI messages
+            setInterval(() => {
+                const aiMessages = [
+                    '🔄 System optimization completed. Performance improved by 3.2%',
+                    '📊 New data patterns detected. Running advanced analysis...',
+                    '🛡️ Security scan completed. All systems secure.',
+                    '⚡ Processing speed increased. Latency reduced by 15ms',
+                    '🎯 Predictive model updated with latest data patterns'
+                ];
+                
+                if (Math.random() < 0.3) { // 30% chance every interval
+                    const randomMessage = aiMessages[Math.floor(Math.random() * aiMessages.length)];
+                    addChatMessage(randomMessage, 'ai');
+                }
+            }, 45000);
+        }
+
+        // Advanced AI Features
+        function performDataAnalysis(data) {
+            if (!Array.isArray(data) || data.length === 0) return null;
+            
+            const analysis = {
+                totalRecords: data.length,
+                dataTypes: {},
+                statistics: {},
+                patterns: []
+            };
+            
+            // Analyze data types and calculate statistics
+            const firstRecord = data[0];
+            Object.keys(firstRecord).forEach(key => {
+                const values = data.map(item => item[key]).filter(val => val !== null && val !== undefined);
+                const numericValues = values.filter(val => !isNaN(parseFloat(val))).map(val => parseFloat(val));
+                
+                if (numericValues.length > 0) {
+                    analysis.dataTypes[key] = 'numeric';
+                    analysis.statistics[key] = {
+                        mean: numericValues.reduce((a, b) => a + b, 0) / numericValues.length,
+                        median: calculateMedian(numericValues),
+                        min: Math.min(...numericValues),
+                        max: Math.max(...numericValues),
+                        standardDeviation: calculateStandardDeviation(numericValues)
+                    };
+                } else {
+                    analysis.dataTypes[key] = 'categorical';
+                    const uniqueValues = [...new Set(values)];
+                    analysis.statistics[key] = {
+                        uniqueCount: uniqueValues.length,
+                        mostCommon: findMostCommon(values)
+                    };
+                }
+            });
+            
+            return analysis;
+        }
+
+        function calculateMedian(numbers) {
+            const sorted = [...numbers].sort((a, b) => a - b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 === 0 
+                ? (sorted[mid - 1] + sorted[mid]) / 2 
+                : sorted[mid];
+        }
+
+        function calculateStandardDeviation(numbers) {
+            const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+            const squaredDiffs = numbers.map(num => Math.pow(num - mean, 2));
+            const avgSquaredDiff = squaredDiffs.reduce((a, b) => a + b, 0) / numbers.length;
+            return Math.sqrt(avgSquaredDiff);
+        }
+
+        function findMostCommon(array) {
+            const frequency = {};
+            array.forEach(item => {
+                frequency[item] = (frequency[item] || 0) + 1;
+            });
+            
+            return Object.keys(frequency).reduce((a, b) => 
+                frequency[a] > frequency[b] ? a : b
+            );
+        }
+
+        // Machine Learning Simulation
+        function runMLAnalysis() {
+            const mlResults = {
+                clustering: {
+                    clusters: Math.floor(Math.random() * 5) + 2,
+                    silhouetteScore: (0.6 + Math.random() * 0.3).toFixed(3)
+                },
+                classification: {
+                    accuracy: (0.85 + Math.random() * 0.1).toFixed(3),
+                    precision: (0.82 + Math.random() * 0.15).toFixed(3),
+                    recall: (0.87 + Math.random() * 0.1).toFixed(3)
+                },
+                regression: {
+                    r2Score: (0.75 + Math.random() * 0.2).toFixed(3),
+                    mse: (Math.random() * 0.1).toFixed(4)
+                }
+            };
+            
+            return mlResults;
+        }
+
+        // Natural Language Processing
+        function analyzeText(text) {
+            const words = text.toLowerCase().split(/\s+/);
+            const wordCount = words.length;
+            const uniqueWords = [...new Set(words)].length;
+            const avgWordLength = words.reduce((sum, word) => sum + word.length, 0) / words.length;
+            
+            const sentiment = analyzeSentiment(text);
+            
+            return {
+                wordCount,
+                uniqueWords,
+                lexicalDiversity: (uniqueWords / wordCount).toFixed(3),
+                avgWordLength: avgWordLength.toFixed(2),
+                sentiment
+            };
+        }
+
+        function analyzeSentiment(text) {
+            const positiveWords = ['good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'awesome', 'perfect'];
+            const negativeWords = ['bad', 'terrible', 'awful', 'horrible', 'worse', 'worst', 'hate', 'problem'];
+            
+            const words = text.toLowerCase().split(/\s+/);
+            let score = 0;
+            
+            words.forEach(word => {
+                if (positiveWords.includes(word)) score += 1;
+                if (negativeWords.includes(word)) score -= 1;
+            });
+            
+            if (score > 0) return 'Positive';
+            if (score < 0) return 'Negative';
+            return 'Neutral';
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                const section = link.getAttribute('href').substring(1);
+                addChatMessage(`🧭 Navigated to ${section.charAt(0).toUpperCase() + section.slice(1)} section`, 'ai');
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'r':
+                        e.preventDefault();
+                        updateAnalytics();
+                        break;
+                    case 'g':
+                        e.preventDefault();
+                        generateCode();
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        generateInsights();
+                        break;
+                }
+            }
+        });
+
+        // Error handling and logging
+        window.addEventListener('error', (e) => {
+            console.error('Application error:', e.error);
+            addChatMessage('⚠️ System alert: Minor error detected and automatically resolved.', 'ai');
+        });
+
+        // Welcome message after page load
+        setTimeout(() => {
+            addChatMessage('🌟 Welcome to AI Nexus! I\'m ready to help with analytics, code generation, data processing, and intelligent insights. Try asking me about data analysis or generating code!', 'ai');
+        }, 2000);
+
+        console.log('🚀 AI Nexus Platform Initialized - All systems operational');
+    </script>
+</body>
+</html>
